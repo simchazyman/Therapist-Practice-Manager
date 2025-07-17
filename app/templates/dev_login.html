@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head><title>Developer Login</title></head>
+<body>
+    <h1>Developer Login</h1>
+
+    <h2>Therapists</h2>
+    <form method="POST">
+        <label>Select Therapist:</label>
+        <select name="email">
+            {% for therapist in therapists %}
+                <option value="{{ therapist.email }}">
+                    {{ therapist.name }} ({{ therapist.specialization }})
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Login as Therapist</button>
+    </form>
+
+    <h2>Admins</h2>
+    <form method="POST">
+        <label>Select Admin:</label>
+        <select name="email">
+            {% for admin in admins %}
+                <option value="{{ admin.email }}">
+                    {{ admin.name }} (Admin)
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Login as Admin</button>
+    </form>
+
+    <h2>Secretaries</h2>
+    <form method="POST">
+        <label>Select Secretary:</label>
+        <select name="email">
+            {% for secretary in secretaries %}
+                <option value="{{ secretary.email }}">
+                    {{ secretary.name }} (Secretary)
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Login as Secretary</button>
+    </form>
+
+</body>
+</html>

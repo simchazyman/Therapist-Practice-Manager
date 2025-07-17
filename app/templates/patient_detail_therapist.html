@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ patient.name }}</title></head>
+<body>
+    <h1>{{ patient.name }}</h1>
+    <p><strong>Date of Birth:</strong> {{ patient.dob }}</p>
+
+    {% if patient.notes_doc_id %}
+        <p><a href="https://docs.google.com/document/d/{{ patient.notes_doc_id }}/edit" target="_blank">📄 View Session Notes Document</a></p>
+    {% else %}
+        <p><em>No notes document has been created for this patient yet.</em></p>
+    {% endif %}
+
+
+    <a href="/schedule_session?patient_id={{ patient._id }}&patient_name={{ patient.name }}">📅 Schedule Session</a>
+
+
+    <br>
+    <a href="/dashboard">← Back to Dashboard</a>
+</body>
+</html>

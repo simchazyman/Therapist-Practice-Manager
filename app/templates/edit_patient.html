@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Patient</title>
+    <script>
+    let customFieldIndex = 0;
+
+    function addNamedCustomField() {
+        const fieldName = document.getElementById("newFieldName").value.trim();
+        if (!fieldName) return;
+
+        const container = document.getElementById("dynamic_custom_fields");
+
+        // Prevent duplicates
+        if (document.getElementById("custom_" + fieldName)) {
+            alert("That field already exists.");
+            return;
+        }
+
+        const label = document.createElement("label");
+        label.innerHTML = "<strong>" + fieldName.replaceAll("_", " ").replace(/\b\w/g, c => c.toUpperCase()) + "</strong>";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.name = "custom_" + fieldName;
+        input.id = "custom_" + fieldName;
+        input.placeholder = "Enter value for " + fieldName;
+
+        container.appendChild(document.createElement("br"));
+        container.appendChild(label);
+        container.appendChild(document.createElement("br"));
+        container.appendChild(input);
+        container.appendChild(document.createElement("br"));
+        container.appendChild(document.createElement("br"));
+
+        document.getElementById("newFieldName").value = "";
+
+        // OPTIONAL: Send AJAX to register field name
+        // fetch('/api/register_custom_field', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ field: fieldName })
+        // });
+    }
+    </script>
+</head>
+<body>
+    <h1>Edit Patient: {{ patient.name }}</h1>
+    <form method="POST">
+        <label>Full Name:</label><br>
+        <input type="text" name="name" value="{{ patient.name }}" required><br><br>
+
+        <label>Date of Birth:</label><br>
+        <input type="date" name="dob" value="{{ patient.dob }}"><br><br>
+
+        <label>Phone:</label><br>
+        <input type="text" name="phone" value="{{ patient.phone }}"><br><br>
+
+        <label>Email:</label><br>
+        <input type="email" name="email" value="{{ patient.email }}"><br><br>
+
+        <label>Address:</label><br>
+        <input type="text" name="address" value="{{ patient.address }}"><br><br>
+
+        <label>Secretary Note:</label><br>
+        <textarea name="secretary_note" rows="4" cols="50">{{ patient.secretary_note }}</textarea><br><br>
+
+    <br>
+
+        <h3>Existing Custom Fields</h3>
+        {% set fields = patient.custom_fields | default({}) %}
+        {% for key, value in fields.items() %}
+            <label>
+                <strong>{{ key.replace('_', ' ').title() }}</strong>
+                <input type="checkbox" name="delete_custom_{{ key }}"> Remove
+            </label><br>
+            <input type="text" name="custom_{{ key }}" value="{{ value }}"><br><br>
+        {% endfor %}
+
+        <h3>Add New Custom Field by Name</h3>
+        <input type="text" id="newFieldName" placeholder="Enter field name" list="field_suggestions">
+
+            <datalist id="field_suggestions">
+                {% for field in field_names %}
+                    <option value="{{ field }}">
+                {% endfor %}
+            </datalist>
+        <button type="button" onclick="addNamedCustomField()">➕ Add Field</button>
+        <div id="dynamic_custom_fields"></div><br>
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <br>
+    <a href="/secretary">← Back to Dashboard</a>
+</body>
+</html>

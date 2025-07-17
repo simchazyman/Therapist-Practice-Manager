@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ user.name }}</h1>
+    <h3>Specialization: {{ user.specialization }}</h3>
+
+    <h2>Your Patients:</h2>
+    <ul>
+        {% for patient in patients %}
+            <li>
+                <a href="{{ url_for('patients.view_patient', patient_id=patient._id) }}">
+                    {{ patient.name }} (DOB: {{ patient.dob }})
+                </a>
+            </li>
+        {% else %}
+            <li>No patients yet.</li>
+        {% endfor %}
+    </ul>
+    <br>
+    <a href="/logout">Logout</a>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ user.name }} (Admin)</h1>
+
+    <!-- Template used by JavaScript to add new approved users -->
+    <template id="user-template">
+        <li>
+            <span class="user-display"></span>
+            <a class="edit-link" href="#">✏️ Edit</a>
+        </li>
+    </template>
+
+    <!-- PENDING USERS -->
+    <h2>Pending Users</h2>
+    <ul id="pending-users">
+        {% for u in pending_users %}
+            <li id="user-{{ u._id }}">
+                <strong>{{ u.name }}</strong> ({{ u.email }})
+                <label>
+                    Role:
+                    <select id="role-{{ u._id }}">
+                        <option value="">-- Select --</option>
+                        <option value="therapist">Therapist</option>
+                        <option value="secretary">Secretary</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </label>
+                <span id="spec-container-{{ u._id }}" style="display:none;">
+                    <label>
+                        Specialization:
+                        <input type="text" id="spec-{{ u._id }}" placeholder="e.g., CBT">
+                    </label>
+                </span>
+                <button onclick="approveUser('{{ u._id }}')">✅ Approve</button>
+            </li>
+            {% endfor %}
+            <li id="no-pending-label" {% if pending_users %}style="display:none;"{% endif %}>
+                No pending users
+            </li>
+
+    </ul>
+
+    <!-- ADMINS -->
+    <h2>Admins</h2>
+    <ul id="admins-list">
+        {% for u in admins %}
+            <li>
+                {{ u.name }} ({{ u.email }})
+                {% if u.email == user.email %}(You){% endif %}
+                {% if u.email in protected_admins %}
+                    🔒 Protected
+                    {% if user.email == u.email %}
+                        <a href="/edit_user/{{ u._id }}">✏️ Edit</a>
+                    {% endif %}
+                {% else %}
+                    {% if user.email in protected_admins %}
+                        <a href="/edit_user/{{ u._id }}">✏️ Edit</a>
+                    {% endif %}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- THERAPISTS -->
+    <h2>Therapists</h2>
+    <p><a href="/admin/therapists">👨‍⚕️ Manage & View Patient Counts</a></p>
+
+    <ul id="therapists-list">
+        {% for u in therapists %}
+            <li>
+                {{ u.name }} — {{ u.specialization }} ({{ u.email }})
+                <a href="/edit_user/{{ u._id }}">✏️ Edit</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% if not therapists %}
+    <p id="no-therapists-label">No therapists yet.</p>
+    {% endif %}
+
+    <!-- SECRETARIES -->
+    <h2>Secretaries</h2>
+    <ul id="secretaries-list">
+        {% for u in secretaries %}
+            <li>
+                {{ u.name }} ({{ u.email }})
+                <a href="/edit_user/{{ u._id }}">✏️ Edit</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <p id="no-secretaries-label" {% if secretaries %}style="display:none;"{% endif %}>No secretaries yet.</p>
+
+    <!-- PATIENTS -->
+    <h2>Patients</h2>
+    <ul>
+        {% for patient in patients %}
+            <li>
+                {{ patient.name }} (DOB: {{ patient.dob }})
+                <a href="/view_patient/{{ patient._id }}">👁 View</a>
+                <a href="/edit_patient/{{ patient._id }}">✏️ Edit</a>
+            </li>
+        {% else %}
+            <li>No patients found.</li>
+        {% endfor %}
+    </ul>
+
+    <br>
+    <a href="/logout">Logout</a>
+
+    <!-- APPROVAL SCRIPT -->
+    <script src="{{ url_for('static', filename='js/approve_user.js') }}"></script>
+
+</body>
+</html>

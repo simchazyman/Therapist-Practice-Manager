@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><title>Patients of {{ therapist.name }}</title></head>
+<body>
+    <h1>Patients of {{ therapist.name }}</h1>
+    <ul>
+        {% for patient in patients %}
+            <li>
+                {{ patient.name }} (DOB: {{ patient.dob }})
+                {% if user.role == 'admin' %}
+                    <form method="POST" action="/admin/unassign_patient/{{ patient._id }}/{{ therapist.email }}" style="display:inline;">
+                        <button type="submit">🗑️ Unassign</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% else %}
+            <li>No patients assigned.</li>
+        {% endfor %}
+    </ul>
+    <br>
+    <a href="/admin/therapists">← Back to Therapist List</a>
+</body>
+</html>

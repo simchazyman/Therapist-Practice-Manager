@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Therapists Overview</title></head>
+<body>
+    <h1>Therapists</h1>
+    <ul>
+        {% for t in therapists %}
+            <li>
+                <strong>{{ t.name }}</strong> ({{ t.email }}) – {{ t.specialization }} –
+                {{ t.patient_count }} patient{{ '' if t.patient_count == 1 else 's' }}
+                <a href="/admin/therapist_patients/{{ t.email }}">👁️ View Patients</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+    <a href="/admin">← Back to Admin</a>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Schedule Therapy Session</title>
+</head>
+<body>
+    <h1>Schedule a New Therapy Session</h1>
+
+    <form method="POST">
+    <label>Select Patient:</label><br>
+    <select name="patient_id" id="patient-select" required>
+        {% for patient in patients %}
+            <option value="{{ patient._id }}" {% if prefill_id == patient._id|string %}selected{% endif %}>
+                {{ patient.name }}
+            </option>
+        {% endfor %}
+    </select><br><br>
+
+    {% if not therapist_email %}
+        <label>Select Therapist:</label><br>
+        <select name="therapist_email" id="therapist-select" required>
+            <option disabled selected>Loading...</option>
+        </select><br><br>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const patientSelect = document.getElementById("patient-select");
+            const therapistSelect = document.getElementById("therapist-select");
+
+            function updateTherapistOptions(patientId) {
+                therapistSelect.innerHTML = "<option disabled selected>Loading...</option>";
+                fetch(`/api/therapists_for_patient/${patientId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        therapistSelect.innerHTML = "";
+                        if (data.therapists.length === 0) {
+                            therapistSelect.innerHTML = "<option disabled selected>No therapists assigned</option>";
+                        } else {
+                            data.therapists.forEach(email => {
+                                const option = document.createElement("option");
+                                option.value = email;
+                                option.textContent = email;
+                                therapistSelect.appendChild(option);
+                            });
+                        }
+                    });
+            }
+
+            // Trigger on page load with default value
+            if (patientSelect.value) {
+                updateTherapistOptions(patientSelect.value);
+            }
+
+            // Trigger when dropdown changes
+            patientSelect.addEventListener("change", function() {
+                updateTherapistOptions(this.value);
+            });
+        });
+        </script>
+    {% endif %}
+
+
+
+
+
+        <label>Session Date:</label><br>
+        <input type="date" name="session_date" required><br><br>
+
+        <label>Start Time:</label><br>
+        <input type="time" name="start_time" required><br><br>
+
+        <label>End Time:</label><br>
+        <input type="time" name="end_time" required><br><br>
+
+        <label>Session Description:</label><br>
+        <textarea name="description" rows="4" cols="50" required></textarea><br><br>
+
+        <button type="submit">Schedule Session</button>
+    </form>
+
+    <br>
+    <a href="/dashboard">← Back to Dashboard</a>
+</body>
+</html>

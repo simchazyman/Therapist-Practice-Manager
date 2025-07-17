@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Waiting for Approval</title>
+    <style>
+        #status {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        .dots::after {
+            content: '';
+            display: inline-block;
+            width: 1ch;
+            animation: dots 1s steps(3, end) infinite;
+        }
+
+        @keyframes dots {
+            0% { content: '.'; }
+            33% { content: '..'; }
+            66% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Waiting for Admin Approval</h1>
+    <p>Please wait — your account is currently under review.</p>
+    <p id="status" class="dots">Checking</p>
+
+    <script>
+        function checkStatus() {
+            fetch("/check_approval_status")
+                .then(res => res.json())
+                .then(data => {
+                    if (data.approved) {
+                        document.getElementById("status").innerText = "Approved! Redirecting...";
+                        setTimeout(() => {
+                            if (data.role === "therapist") {
+                                window.location.href = "/dashboard";
+                            } else if (data.role === "admin") {
+                                window.location.href = "/admin";
+                            } else if (data.role === "secretary") {
+                                window.location.href = "/secretary";
+                            }
+                        }, 1000);
+                    }
+                });
+        }
+
+        // Poll every 5 seconds
+        setInterval(checkStatus, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assign Therapist</title>
+</head>
+<body>
+    <h1>Assign Therapist for {{ patient.name }}</h1>
+
+    <form method="POST">
+        {% if not is_admin and patient.doctor_emails %}
+            <p><strong>This patient is already assigned to a therapist.</strong><br>
+            Only an admin can modify therapist assignments.</p>
+        {% else %}
+            {% if is_admin %}
+                <p>Select one or more therapists:</p>
+                {% for therapist in therapists %}
+                    <label>
+                        <input type="checkbox" name="therapist_emails" value="{{ therapist.email }}"
+                            {% if therapist.email in patient.doctor_emails %}checked{% endif %}>
+                        {{ therapist.name }} ({{ therapist.email }})
+                    </label><br>
+                {% endfor %}
+            {% else %}
+                <p>Select one therapist:</p>
+                <select name="therapist_emails" required>
+                    <option value="">-- Select Therapist --</option>
+                    {% for therapist in therapists %}
+                        <option value="{{ therapist.email }}"
+                            {% if therapist.email in patient.doctor_emails %}selected{% endif %}>
+                            {{ therapist.name }} ({{ therapist.email }})
+                        </option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+            <br><br>
+            <button type="submit">Assign</button>
+        {% endif %}
+    </form>
+
+    <br>
+    <a href="/view_patient/{{ patient._id }}">← Back to Patient</a>
+</body>
+</html>
