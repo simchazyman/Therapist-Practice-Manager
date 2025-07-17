@@ -4,7 +4,7 @@ CLIENT_SECRET = "your-google-oauth-client-secret"
 REDIRECT_URI = "https://yourdomain.com/oauth2callback"
 
 # MongoDB configuration
-MONGO_URI = "mongodb+srv://username:password@cluster0.mongodb.net/mydatabase?retryWrites=true&w=majority"
+MONGO_URI = "your_mongo_uri"
 DB_NAME = "your_database_name"
 USER_COLLECTION = "users"
 
