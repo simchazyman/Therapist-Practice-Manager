@@ -16,10 +16,11 @@ This is a Flask-based web application designed to help manage patient informatio
 
 ---
 
-## ⚙️ Requirements
+## ⚙️ Requirements & Configuration
 
-- Python 3.8 or higher
-- MongoDB instance accessible via connection URI
-- Google API credentials for OAuth, Docs, and Calendar
-- Administrator email configured for access control
+- Python 3.8 or higher  
+- MongoDB instance accessible via connection URI  
+- Google API credentials for OAuth, Docs, and Calendar  
+- Administrator email(s) configured for access control  
 
+A configuration file named `config.py` is included. It needs to have valid values put in to make the app run.
